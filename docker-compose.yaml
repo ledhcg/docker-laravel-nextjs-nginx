@@ -11,6 +11,8 @@ services:
     volumes:
       - ./src:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - net
     depends_on:
       - app
       - db
@@ -19,6 +21,7 @@ services:
   db:
     image: mysql:8.0
     container_name: ${PROJECT_NAME}-mysql
+    restart: always
     volumes:
       - ./mysql/data:/var/lib/mysql
     environment:
@@ -28,21 +31,28 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - "3306:3306"
+    networks:
+      - net
 
   # phpMyAdmin Service
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: ${PROJECT_NAME}-phpmyadmin
+    restart: always
     environment:
       - PMA_HOST=${PMA_HOST}
       - PMA_USER=${PMA_USER}
       - PMA_PASSWORD=${PMA_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - "8080:80"
     links:
       - db:db
     depends_on:
       - db
+    networks:
+      - net
+    
 
   # Application Service
   app:
@@ -55,5 +65,11 @@ services:
     ports:
       - "9000:9000"
     working_dir: /var/www
+    networks:
+      - net
+
+networks:
+  net:
+
 
 
