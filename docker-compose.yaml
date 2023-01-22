@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+
+  # Web Server Service
+  nginx:
+    image: nginx:alpine
+    container_name: ${PROJECT_NAME}-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - app
+      - db
+
+  #Database Service
+  db:
+    image: mysql:8.0
+    container_name: ${PROJECT_NAME}-mysql
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+
+  # phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ${PROJECT_NAME}-phpmyadmin
+    environment:
+      - PMA_HOST=${PMA_HOST}
+      - PMA_USER=${PMA_USER}
+      - PMA_PASSWORD=${PMA_PASSWORD}
+    ports:
+      - "8080:80"
+    links:
+      - db:db
+    depends_on:
+      - db
+
+  # Application Service
+  app:
+    container_name: ${PROJECT_NAME}-application
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www
+    ports:
+      - "9000:9000"
+    working_dir: /var/www
+
+
