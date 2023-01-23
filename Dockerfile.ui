@@ -1,0 +1,14 @@
+FROM node:18-alpine
+
+WORKDIR /var/www/ui
+
+# Copy lock files if file exists
+COPY ./src/ui/package.json ./
+COPY ./src/ui/yarn.lock* ./
+COPY ./src/ui/package-lock.json ./
+
+RUN yarn install
+
+COPY ./src/ui .
+
+CMD yarn dev
