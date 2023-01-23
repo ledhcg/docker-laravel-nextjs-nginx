@@ -1,8 +1,3 @@
-## Built With
-
-- [![Next][next.js]][next-url]
-- [![Laravel][laravel.com]][laravel-url]
-
 ## How to Install and Run the project
 
 1. Clone the repo
