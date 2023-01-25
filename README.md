@@ -2,7 +2,7 @@
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/bcsdlbnga/website-backend.git
+   git clone https://github.com/ledhcg/docker-laravel-nextjs-nginx.git
    ```
 2. Go to folder
    ```sh
